@@ -4,7 +4,7 @@
     using System.Data.Entity;
     public class ShipContext : DbContext
     {
-        public ShipContext() : base("DefaultConnection")
+        public ShipContext() : base("DBConnection")
         { }
         public DbSet<Ship> Ships { get; set; }
     }
