@@ -1,8 +1,11 @@
 ﻿namespace SeaBattleBasic.Ships
 {
     using SeaBattleBasic.Interfaces;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
+    [Table("Ship")]
     public abstract class Ship : IAbstractShip
     {
         public Ship()
@@ -10,6 +13,8 @@
             this.Move();
         }
 
+        [Key]
+        public int Id { get; set; }
         public int Length { get; set; }
 
         public int Range { get; set; }
