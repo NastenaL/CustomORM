@@ -24,9 +24,11 @@
                     Console.WriteLine("Id = {0}; lenght {1} - {2}", u.Id, u.Length, u.Range);
                 }
                 ship2.Length = 1;
+                ship2.Dx = 20;
                 sqlRepository.Update(ship2);
                 sqlRepository.Save();
                 var e = sqlRepository.GetEntity(2);
+             
             }
            
             Console.ReadKey();
