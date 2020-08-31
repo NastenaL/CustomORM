@@ -31,20 +31,26 @@
         {
             string sqlExpression = "INSERT INTO Ship (Length, Range, Dx, Dy ) "+
                                    "VALUES ("+ship.Length+", "+ship.Range+", "+ship.Dx+", "+ship.Dy+")";
+            EcecuteQuery(sqlExpression);
 
+            db.Ships.Add(ship);
+        }
+        private void EcecuteQuery(string sqlExpression)
+        {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
-                int number = command.ExecuteNonQuery();
-                Console.WriteLine("Добавлено объектов: {0}", number);
-            }
-            db.Ships.Add(ship);
-        }
+                command.ExecuteNonQuery();
 
-        public void Update(Ship book)
+            }
+        }
+        public void Update(Ship ship)
         {
-           db.Entry(book).State = EntityState.Modified;
+            string sqlExpression = "UPDATE  Ship  SET Length =" + ship.Length + ", Range =" 
+                                    + ship.Range + ", Dx = " + ship.Dx + ", Dy =" + ship.Dy 
+                                    + " WHERE Id ="+ ship.Id;
+            EcecuteQuery(sqlExpression);
         }
 
         public void Delete(int id)
