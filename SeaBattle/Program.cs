@@ -25,8 +25,9 @@
                 }
                 ship2.Length = 1;
                 sqlRepository.Update(ship2);
-                sqlRepository.Delete(1);
                 sqlRepository.Save();
+                var e = sqlRepository.GetEntity(2);
+             
             }
            
             Console.ReadKey();
