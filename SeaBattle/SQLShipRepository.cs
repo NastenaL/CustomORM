@@ -1,6 +1,6 @@
 ﻿namespace СustomORM
 {
-    using Microsoft.EntityFrameworkCore;
+    using SeaBattle;
     using SeaBattleBasic.Ships;
     using System;
     using System.Collections.Generic;
@@ -38,7 +38,7 @@
 
         public void Save()
         {
-          //  db.SaveChanges();
+            db.SaveChanges();
         }
 
         private bool disposed = false;
@@ -49,7 +49,7 @@
             {
                 if (disposing)
                 {
-                  //  db.Dispose();
+                    db.Dispose();
                 }
             }
             this.disposed = true;
