@@ -68,10 +68,10 @@
             return res;
         }
 
-        public static bool operator ==(Ship a, Ship b)
-        {
-            return IsEqualsShips(a, b);
-        }
+        //public static bool operator ==(Ship a, Ship b)
+        //{
+        //    return IsEqualsShips(a, b);
+        //}
 
         public override bool Equals(object obj)
         {
@@ -95,9 +95,9 @@
         }
 
 
-        public static bool operator !=(Ship a, Ship b)
-        {
-            return !IsEqualsShips(a, b);
-        }
+        //public static bool operator !=(Ship a, Ship b)
+        //{
+        //    return !IsEqualsShips(a, b);
+        //}
     }
 }

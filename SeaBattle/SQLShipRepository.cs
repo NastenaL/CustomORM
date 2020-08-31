@@ -8,6 +8,10 @@
 
     class SQLShipRepository : IRepository<Ship>
     {
+        public SQLShipRepository()
+        {
+            db = new ShipContext();
+        }
         private ShipContext db;
 
         public IEnumerable<Ship> GetEntityList()
