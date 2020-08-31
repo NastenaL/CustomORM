@@ -4,6 +4,7 @@
     using SeaBattleBasic.Ships;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
 
     class SQLShipRepository : IRepository<Ship>
     {
@@ -26,7 +27,7 @@
 
         public void Update(Ship book)
         {
-          //  db.Entry(book).State = EntityState.Modified;
+           db.Entry(book).State = EntityState.Modified;
         }
 
         public void Delete(int id)
