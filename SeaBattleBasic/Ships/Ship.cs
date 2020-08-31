@@ -27,8 +27,6 @@
             }
         }
 
-        public float Speed { get; set; }
-
         public int Dx { get; set; }
 
         public int Dy { get; set; }
@@ -36,8 +34,7 @@
         public StringBuilder Move()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendFormat("This ship is move with speed = {0} km/h in directions dx = {1}, dy ={2}",
-                                       this.Speed,
+            stringBuilder.AppendFormat("This ship is move in directions dx = {0}, dy ={1}",
                                        this.Dx,
                                        this.Dy);
             return stringBuilder;
@@ -67,7 +64,6 @@
         {
             bool res;
             res = a.GetType() == b.GetType() &&
-                  a.Speed == b.Speed &&
                   b.IsPoint && a.IsPoint;
             return res;
         }
