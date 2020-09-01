@@ -16,6 +16,7 @@
                 sqlRepository.Create(ship2);
                 ship2.Length = 1;
                 sqlRepository.Update(ship2);
+                sqlRepository.Delete(17);
             }
            
             Console.ReadKey();
