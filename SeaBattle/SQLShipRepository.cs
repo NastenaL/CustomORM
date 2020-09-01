@@ -55,15 +55,10 @@
 
         public void Delete(int id)
         {
-      //      Ship ship = db.Ships.Find(id);
-      //      if (ship != null)
-        //        db.Ships.Remove(ship);
+            string sqlExpression = "DELETE FROM Ship WHERE Id =" + id;
+            EcecuteQuery(sqlExpression);
         }
 
-        public void Save()
-        {
-            db.SaveChanges();
-        }
 
         private bool disposed = false;
 
