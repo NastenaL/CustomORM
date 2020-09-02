@@ -4,10 +4,9 @@
     using SeaBattleBasic.Ships;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.SqlClient;
 
-    class SQLShipRepository : IRepository<Ship>
+    class SQLShipRepository 
     {
         string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
         
