@@ -1,10 +1,14 @@
-﻿namespace SeaBattle
+﻿using SeaBattleBasic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SeaBattle
 {
-    using System;
-    using System.Collections.Generic;
     public class UnitOfWork : IDisposable
     {
-
         private readonly EFDbContext context;
         private bool disposed;
         private Dictionary<string, object> repositories;
