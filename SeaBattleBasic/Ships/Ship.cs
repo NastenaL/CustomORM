@@ -13,10 +13,13 @@
             this.Move();
         }
 
+        [Column("Length")]
         public int Length { get; set; }
 
+        [Column("Range")]
         public int Range { get; set; }
 
+        [NotMapped]
         public bool IsPoint
         {
             get
@@ -25,8 +28,10 @@
             }
         }
 
+        [Column("Dx")]
         public int Dx { get; set; }
 
+        [Column("Dy")]
         public int Dy { get; set; }
 
         public StringBuilder Move()
