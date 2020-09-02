@@ -6,10 +6,10 @@
     using System.Linq;
     using System.Reflection;
 
-    class EFDbContext : DbContext
+    public class EFDbContext : DbContext
     {
         public EFDbContext()
-              : base("name=DbConnectionString")
+              : base("name=DBConnection")
         {
         }
 
