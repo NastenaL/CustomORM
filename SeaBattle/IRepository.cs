@@ -1,14 +1,19 @@
 ﻿namespace СustomORM
 {
-    using System;
-    using System.Collections.Generic;
+    using System.Linq;
 
-    interface IRepository<T> : IDisposable
+    public interface IRepository
     {
-        IEnumerable<T> GetEntityList();
-        T GetEntity(int id);
-        void Create(T item);
-        void Update(T item);
-        void Delete(int id);
+        void Add<T>(T entity)
+         where T : class;
+
+        void Update<T>(T entity)
+            where T : class;
+
+        void Delete<T>(T entity)
+            where T : class;
+
+        IQueryable<T> GetIQueryable<T>()
+            where T : class;
     }
 }
