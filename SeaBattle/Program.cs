@@ -8,8 +8,8 @@
     {
         static void Main(string[] args)
         {
-            
-           
+            Repository<Ship> shipRepository;
+
             Console.ReadKey();
         }
     }
