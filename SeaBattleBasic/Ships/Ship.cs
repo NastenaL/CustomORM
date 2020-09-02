@@ -6,15 +6,13 @@
     using System.Text;
 
     [Table("Ship")]
-    public abstract class Ship : IAbstractShip
+    public abstract class Ship : BaseEntity, IAbstractShip
     {
         public Ship()
         {
             this.Move();
         }
 
-        [Key]
-        public int Id { get; set; }
         public int Length { get; set; }
 
         public int Range { get; set; }

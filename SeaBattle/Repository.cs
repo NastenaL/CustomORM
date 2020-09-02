@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeaBattle
+﻿namespace SeaBattle
 {
+    using SeaBattleBasic;
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Validation;
+    using System.Linq;
+
     public class Repository<T> where T : BaseEntity
     {
         private readonly EFDbContext context;
