@@ -1,5 +1,6 @@
 ﻿namespace SeaBattle
 {
+    using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System;
 
@@ -8,8 +9,22 @@
     {
         static void Main(string[] args)
         {
-            UnitOfWork unitOfWork = new UnitOfWork();
-            Repository<Ship> shipRepository = unitOfWork.Repository<Ship>();
+            ShipType military = new ShipType
+            {
+                Id = 1,
+                Description = "Military"
+            };
+            ShipType auxiliary = new ShipType
+            {
+                Id = 2,
+                Description = "Auxiliary"
+            };
+            ShipType mix = new ShipType
+            {
+                Id = 3,
+                Description = "Mix"
+            };
+
             AuxiliaryShip auxiliaryShip = new AuxiliaryShip
             {
                 Dx = 1,
@@ -24,13 +39,8 @@
                 Range = 1,
                 Length = 2
             };
-            shipRepository.Insert(auxiliaryShip);
-            shipRepository.Insert(militaryShip);
-
-            auxiliaryShip.Length = 1;
-            shipRepository.Update(auxiliaryShip);
-            shipRepository.Delete(militaryShip);
-            var ship = shipRepository.GetById(3);
+           
+            
             Console.ReadKey();
         }
     }
