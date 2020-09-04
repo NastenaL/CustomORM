@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Drawing;
     using System.Linq;
     using SeaBattleBasic.Ships;
 
+    [Table("PlayingField")]
     public class PlayingField
     {
         public PlayingField()
