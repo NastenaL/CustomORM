@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Drawing;
     using System.Linq;
     using SeaBattleBasic.Ships;
 
+    [Table("PlayingField")]
     public class PlayingField
     {
         public PlayingField()
@@ -39,15 +41,15 @@
             {
                 Range = random.Next(Сonfiguration.MinRange, Сonfiguration.MaxRange)
             };
-            switch (type)
+            switch (type.Description)
             {
-                case ShipType.Auxiliary:
+                case "Auxiliary":
                     ship.CreateAuxiliaryShip();
                     break;
-                case ShipType.Military:
+                case "Military":
                     ship.CreateMilitaryShip();
                     break;
-                case ShipType.Mix:
+                case "Mix":
                     ship.CreateMixShip();
                     break;
             }

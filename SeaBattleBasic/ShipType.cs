@@ -1,12 +1,9 @@
 ﻿namespace SeaBattleBasic
 {
     using System;
-
-    [Flags]
-    public enum ShipType
+    public class ShipType
     {
-        Military = 0,
-        Auxiliary = 1,
-        Mix = 2
+        public int Id { get; set; }
+        public string Description { get; set; }
     }
 }

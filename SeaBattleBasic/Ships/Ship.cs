@@ -1,7 +1,6 @@
 ﻿namespace SeaBattleBasic.Ships
 {
     using SeaBattleBasic.Interfaces;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
@@ -33,6 +32,13 @@
 
         [Column("Dy")]
         public int Dy { get; set; }
+
+        [Column("ShipTypeId")]
+        public ShipType ShipTypeId { get; set; }
+
+        [Column("PlayingFieldId")]
+        public int PlayingFieldId { get; set; }
+
 
         public StringBuilder Move()
         {
