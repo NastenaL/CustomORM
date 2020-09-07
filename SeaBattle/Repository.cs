@@ -8,7 +8,7 @@
     using System.Linq;
     using СustomORM;
 
-    public class AbstractRepository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected string TableName
         {
@@ -75,7 +75,7 @@
                 return;
             }
             var query = $"delete from {TableName} where id = {entity.Id}";
-            DAL.Query(query);
+          //  DAL.Query(query);
         }
 
         public void Delete(ICollection<T> entityes)
@@ -86,20 +86,20 @@
                 return;
             }
             var query = $"delete from {TableName} where id in ({collectionId})";
-            DAL.Query(query);
+         //   DAL.Query(query);
         }
 
         public ICollection<T> GetAll()
         {
             var query = $"select * from {TableName}";
-            DataTable dt = DAL.SelectDataTable(query);
+            DataTable dt = new DataTable();// DAL.SelectDataTable(query);
             return DataTableToCollection(dt);
         }
 
         public ICollection<T> GetAll(string where)
         {
             var query = $"select * from {TableName} where {where}";
-            DataTable dt = DAL.SelectDataTable(query);
+            DataTable dt = new DataTable(); //DAL.SelectDataTable(query);
             return DataTableToCollection(dt);
         }
 
