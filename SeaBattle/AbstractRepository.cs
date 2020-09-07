@@ -4,6 +4,7 @@
     using SeaBattleBasic.Ships;
     using System.Collections.Generic;
     using System.Data;
+    using System.Data.SqlClient;
     using System.Linq;
     using СustomORM;
 
@@ -36,12 +37,10 @@
                         Range = dr.Field<int>("Range"),
                         Dx = dr.Field<int>("Dx"),
                         Dy = dr.Field<int>("Dy"),
-                        Pla
-
+                        PlayingFieldId = dr.Field<int>("PlayingFieldId"),
+                        ShipTypeId = dr.Field<int>("ShipTypeId")
                     };
                     break;
-                    ca
-
             }
             return (T)result;
         }
@@ -55,12 +54,18 @@
             return dt.AsEnumerable().Select(x => DataRowToModel(x)).ToList();
         }
 
-        public T GetById(int id)
+    
+        public void GetById(int id)
         {
+            string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=usersdb;Integrated Security=True";
             var query = $"select * from {TableName} where id = {id}";
-            //the data access layer is implemented elsewhere
-            DataRow dr = new DAL.SelectDataRow(query);
-            return DataRowToModel(dr);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                int number = command.ExecuteNonQuery();
+            }
+          //  return DataRowToModel(dr);
         }
 
         public void Delete(T entity)

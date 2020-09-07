@@ -14,7 +14,6 @@ namespace SeaBattle
     {
         public static string connectionString = ConfigurationManager.ConnectionStrings["YourWebConfigConnection"].ConnectionString;
 
-        // function that creates a list of an object from the given data table
         public static List<T> CreateListFromTable<T>(DataTable tbl) where T : new()
         {
             // define return list
@@ -31,7 +30,6 @@ namespace SeaBattle
             return lst;
         }
 
-        // function that creates an object from the given data row
         public static T CreateItemFromRow<T>(DataRow row) where T : new()
         {
             // create a new object
@@ -60,7 +58,6 @@ namespace SeaBattle
             }
         }
 
-        //call stored procedure to get data.
         public static DataSet GetRecordWithExtendedTimeOut(string SPName, params SqlParameter[] SqlPrms)
         {
             DataSet ds = new DataSet();

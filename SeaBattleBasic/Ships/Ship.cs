@@ -34,7 +34,7 @@
         public int Dy { get; set; }
 
         [Column("ShipTypeId")]
-        public ShipType ShipTypeId { get; set; }
+        public int ShipTypeId { get; set; }
 
         [Column("PlayingFieldId")]
         public int PlayingFieldId { get; set; }
