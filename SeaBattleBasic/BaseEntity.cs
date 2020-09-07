@@ -7,6 +7,5 @@
     {
         [Key]
         public int Id { get; set; }
-        public string IP { get; set; }
     }
 }

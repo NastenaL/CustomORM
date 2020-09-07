@@ -1,12 +1,13 @@
 ﻿namespace SeaBattle
 {
+    using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using СustomORM;
 
-    public class AbstractRepository<T> : IRepository<T> where T : class
+    public class AbstractRepository<T> : IRepository<T> where T : BaseEntity
     {
         protected string TableName
         {
@@ -23,23 +24,26 @@
                 return null;
             }
 
-            T result;
+            object result = new object();
             var type = typeof(T).FullName;
-            switch (typeof(T))
+            switch (typeof(T).FullName)
             {
-                case MilitaryShip c:
-                    result =  new MilitaryShip()
+                case "MilitaryShip":
+                    result = new MilitaryShip()
                     {
                         Id = dr.Field<int>("id"),
                         Length = dr.Field<int>("Length"),
                         Range = dr.Field<int>("Range"),
-                        Dx = dr.Field<int>("Dx")
+                        Dx = dr.Field<int>("Dx"),
+                        Dy = dr.Field<int>("Dy"),
+                        Pla
 
                     };
                     break;
+                    ca
 
             }
-            return result;
+            return (T)result;
         }
 
         protected ICollection<T> DataTableToCollection(DataTable dt)
@@ -83,7 +87,7 @@
         public ICollection<T> GetAll()
         {
             var query = $"select * from {TableName}";
-            DataTable dt = DbUtils.SelectDataTable(query);
+            DataTable dt = DAL.SelectDataTable(query);
             return DataTableToCollection(dt);
         }
 
