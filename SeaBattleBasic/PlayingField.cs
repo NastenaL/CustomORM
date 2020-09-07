@@ -41,15 +41,15 @@
             {
                 Range = random.Next(Сonfiguration.MinRange, Сonfiguration.MaxRange)
             };
-            switch (type)
+            switch (type.Description)
             {
-                case ShipType.Auxiliary:
+                case "Auxiliary":
                     ship.CreateAuxiliaryShip();
                     break;
-                case ShipType.Military:
+                case "Military":
                     ship.CreateMilitaryShip();
                     break;
-                case ShipType.Mix:
+                case "Mix":
                     ship.CreateMixShip();
                     break;
             }

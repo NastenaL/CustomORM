@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using СustomORM;
-
-namespace SeaBattle
+﻿namespace SeaBattle
 {
+    using SeaBattleBasic.Ships;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using СustomORM;
+
     public class AbstractRepository<T> : IRepository<T> where T : class
     {
         protected string TableName
@@ -21,15 +22,24 @@ namespace SeaBattle
             {
                 return null;
             }
-          
-            return new typeof(T).FullName
-            {
-                Id = dr.Field<int>("id"),
-                Name = dr.Field<string>("name"),
-                Surname = dr.Field<string>("surname"),
-                Age = dr.Field<int>("age")
 
-            };
+            T result;
+            var type = typeof(T).FullName;
+            switch (typeof(T))
+            {
+                case MilitaryShip c:
+                    result =  new MilitaryShip()
+                    {
+                        Id = dr.Field<int>("id"),
+                        Length = dr.Field<int>("Length"),
+                        Range = dr.Field<int>("Range"),
+                        Dx = dr.Field<int>("Dx")
+
+                    };
+                    break;
+
+            }
+            return result;
         }
 
         protected ICollection<T> DataTableToCollection(DataTable dt)
