@@ -72,11 +72,11 @@
                 {
                     while(reader.Read())
                     {
-                        result = "Ship #" + reader["Id"] + " was founded " +
-                                  " Range = "+ reader["Range"] + 
-                                  " Length = " + reader["Length"] + 
-                                  " Dx = " + reader["Dx"] + 
-                                  " Dy = " + reader["Dy"] + "\n";
+                        result = "Ship #" + reader.GetInt32(0) + " was founded " +
+                                  "  " + reader.GetInt32(1) +
+                                  "  " + reader.GetInt32(2) +
+                                  "  " + reader.GetInt32(3) +
+                                  "  " + reader.GetInt32(4) + "\n";
                     }    
                 }
                 finally
@@ -98,24 +98,33 @@
             ExecuteQuery(query);
         }
 
-        public void GetAll()
+        public List<string> GetAll()
         {
+            List<string> result = new List<string>();
             var query = $"select * from {TableName}";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                List<T> res = new List<T>();
-                if (reader.HasRows) 
+                try
                 {
-                    while (reader.Read()) 
+                    while (reader.Read())
                     {
-                       //add to res
+                        result.Add("Ship #" + reader.GetInt32(0) + " was founded " +
+                                  "  " + reader.GetInt32(1) +
+                                  "  " + reader.GetInt32(2) +
+                                  "  " + reader.GetInt32(3) +
+                                  "  " + reader.GetInt32(4) + "\n");
                     }
                 }
-                reader.Close();
-            }  
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return result;
         }
 
         public void Update(T entity)

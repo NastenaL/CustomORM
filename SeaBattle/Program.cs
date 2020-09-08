@@ -3,6 +3,7 @@
     using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System;
+    using System.Collections.Generic;
 
     class Program
     {
@@ -49,14 +50,15 @@
             };
 
             Repository<Ship> shipRepository = new Repository<Ship>();
-           // shipRepository.Insert(militaryShip);
+            // shipRepository.Insert(militaryShip);
             //shipRepository.Insert(auxiliaryShip);
             //militaryShip.Length = 3;
             //shipRepository.Update(militaryShip);
 
             //shipRepository.Delete(auxiliaryShip);
-            shipRepository.GetAll();
-            Console.WriteLine(shipRepository.GetById(2));
+            //Console.WriteLine(shipRepository.GetById(2));
+            List<string> res = shipRepository.GetAll();
+
             Console.ReadKey();
         }
     }
