@@ -62,12 +62,7 @@
         {
             
             var query = $"select * from {TableName} where id = {id}";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand(query, connection);
-                int number = command.ExecuteNonQuery();
-            }
+            ExecuteQuery(query);
           //  return DataRowToModel(dr);
         }
 
@@ -120,21 +115,33 @@
         {
             var r = typeof(T);
             var fields = r.GetProperties();
-            PropertyInfo[] props = r.GetProperties();
        
             string columns = "";
+            string values = "";
             foreach(PropertyInfo property in fields)
             {
                 columns += property.Name + ",";
+                values += "'" +GetPropValue(entity, property.Name)+"'" + ",";
             }
-            
-            string values = "";
+            columns = columns.Remove(columns.Length - 1);
+            values = values.Remove(values.Length - 1);
+            //string values = GetPropValue(entity);
             var query = $"insert into {TableName} ({columns}) values ({values})";
+            ExecuteQuery(query);
+        }
+
+        public static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
+        private void ExecuteQuery(string query)
+        {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
-                int number = command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
             }
         }
     }
