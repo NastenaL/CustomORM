@@ -18,15 +18,6 @@
         [Column("Range")]
         public int Range { get; set; }
 
-        [NotMapped]
-        public bool IsPoint
-        {
-            get
-            {
-                return Length == 1;
-            }
-        }
-
         [Column("Dx")]
         public int Dx { get; set; }
 
@@ -73,7 +64,7 @@
         {
             bool res;
             res = a.GetType() == b.GetType() &&
-                  b.IsPoint && a.IsPoint;
+                  b.Length == 1 && a.Length == 1;
             return res;
         }
 
