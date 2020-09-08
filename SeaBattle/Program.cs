@@ -51,9 +51,11 @@
             Repository<Ship> shipRepository = new Repository<Ship>();
             shipRepository.Insert(militaryShip);
             shipRepository.Insert(auxiliaryShip);
-            militaryShip.Length = 3;
-            shipRepository.Update(militaryShip);
+            //militaryShip.Length = 3;
+            //shipRepository.Update(militaryShip);
 
+            //shipRepository.Delete(auxiliaryShip);
+            shipRepository.GetAll();
             Console.ReadKey();
         }
     }

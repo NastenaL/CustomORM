@@ -11,7 +11,7 @@
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
+        readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
 
         protected string TableName
         {
@@ -29,7 +29,6 @@
             }
 
             object result = new object();
-            var type = typeof(T).FullName;
             switch (typeof(T).FullName)
             {
                 case "MilitaryShip":
@@ -74,27 +73,19 @@
             }
             var query = $"delete from {TableName} where id = {entity.Id}";
             ExecuteQuery(query);
-          //  DAL.Query(query);
         }
 
-        public ICollection<T> GetAll()
+        public void GetAll()
         {
             var query = $"select * from {TableName}";
-            DataTable dt = new DataTable();// DAL.SelectDataTable(query);
-            return DataTableToCollection(dt);
-        }
-
-        public ICollection<T> GetAll(string where)
-        {
-            var query = $"select * from {TableName} where {where}";
-            DataTable dt = new DataTable(); //DAL.SelectDataTable(query);
-            return DataTableToCollection(dt);
-        }
-
-        protected string IdentityCollectionToSqlIdFormat(ICollection<T> collection)
-        {
-            var array = collection.Select(x => x.Id);
-            return string.Join(",", array);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Close();
+            }
+            
         }
 
         public void Update(T entity)
