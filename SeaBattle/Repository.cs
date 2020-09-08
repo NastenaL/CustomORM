@@ -109,13 +109,23 @@
 
         public void Update(T entity)
         {
+            var fields = typeof(T).GetProperties();
 
+            string columnsValues = "";
+            foreach (PropertyInfo property in fields)
+            {
+                columnsValues += property.Name + " = '" + GetPropValue(entity, property.Name) + "'" + ",";
+            }
+            columnsValues = columnsValues.Remove(columnsValues.Length - 1);
+
+            var id = entity.Id;
+            var query = $"update {TableName} set {columnsValues} where Id = {id}";
+            ExecuteQuery(query);
         }
 
         public void Insert(T entity)
         {
-            var r = typeof(T);
-            var fields = r.GetProperties();
+            var fields = typeof(T).GetProperties();
        
             string columns = "";
             string values = "";

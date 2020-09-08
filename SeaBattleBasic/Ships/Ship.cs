@@ -1,10 +1,8 @@
 ﻿namespace SeaBattleBasic.Ships
 {
     using SeaBattleBasic.Interfaces;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
-    [Table("Ship")]
     public abstract class Ship : BaseEntity, IAbstractShip
     {
         public Ship()
@@ -12,22 +10,11 @@
             this.Move();
         }
 
-        [Column("Length")]
         public int Length { get; set; }
-
-        [Column("Range")]
         public int Range { get; set; }
-
-        [Column("Dx")]
         public int Dx { get; set; }
-
-        [Column("Dy")]
         public int Dy { get; set; }
-
-        [Column("ShipTypeId")]
         public int ShipTypeId { get; set; }
-
-        [Column("PlayingFieldId")]
         public int PlayingFieldId { get; set; }
 
 

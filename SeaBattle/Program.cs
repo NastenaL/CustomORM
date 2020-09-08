@@ -25,9 +25,9 @@
             };
 
             Repository<ShipType> shipTypeRepository = new Repository<ShipType>();
-            shipTypeRepository.Insert(military);
-            shipTypeRepository.Insert(auxiliary);
-            shipTypeRepository.Insert(mix);
+            //shipTypeRepository.Insert(military);
+            //shipTypeRepository.Insert(auxiliary);
+            //shipTypeRepository.Insert(mix);
 
             AuxiliaryShip auxiliaryShip = new AuxiliaryShip
             {
@@ -47,8 +47,10 @@
             };
 
             Repository<Ship> shipRepository = new Repository<Ship>();
-           // shipRepository.Insert(militaryShip);
-           // shipRepository.Insert(auxiliaryShip);
+            // shipRepository.Insert(militaryShip);
+            // shipRepository.Insert(auxiliaryShip);
+            militaryShip.Length = 3;
+            shipRepository.Update(militaryShip);
 
             Console.ReadKey();
         }
