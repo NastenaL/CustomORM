@@ -6,10 +6,13 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Reflection;
     using СustomORM;
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
+        string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
+
         protected string TableName
         {
             get
@@ -57,7 +60,7 @@
     
         public void GetById(int id)
         {
-            string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=usersdb;Integrated Security=True";
+            
             var query = $"select * from {TableName} where id = {id}";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -115,7 +118,24 @@
         }
         public void Insert(T entity)
         {
-
+            var r = typeof(T);
+            var fields = r.GetProperties();
+            PropertyInfo[] props = r.GetProperties();
+       
+            string columns = "";
+            foreach(PropertyInfo property in fields)
+            {
+                columns += property.Name + ",";
+            }
+            
+            string values = "";
+            var query = $"insert into {TableName} ({columns}) values ({values})";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                int number = command.ExecuteNonQuery();
+            }
         }
     }
 }
