@@ -59,6 +59,11 @@
     
         public void GetById(int id)
         {
+            var t = DataSetGenerator.ShipDataSet();
+            
+            DataTable firstTable = t.Tables[0];
+            var rows = firstTable.AsEnumerable().Where(r => r.Field<int>("Id") == id);
+
             var fields = typeof(T).GetProperties();
 
             string columns = "";
@@ -78,7 +83,7 @@
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
-                command.ExecuteNonQuery().;
+                command.ExecuteNonQuery();
             }
         }
 
