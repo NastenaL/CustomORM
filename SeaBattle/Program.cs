@@ -31,6 +31,7 @@
 
             AuxiliaryShip auxiliaryShip = new AuxiliaryShip
             {
+                Id = 2,
                 Dx = 1,
                 Dy = 0,
                 Range = 1,
@@ -39,6 +40,7 @@
             };
             MilitaryShip militaryShip = new MilitaryShip
             {
+                Id = 1,
                 Dx = 1,
                 Dy = 0,
                 Range = 1,
@@ -47,8 +49,8 @@
             };
 
             Repository<Ship> shipRepository = new Repository<Ship>();
-            // shipRepository.Insert(militaryShip);
-            // shipRepository.Insert(auxiliaryShip);
+            shipRepository.Insert(militaryShip);
+            shipRepository.Insert(auxiliaryShip);
             militaryShip.Length = 3;
             shipRepository.Update(militaryShip);
 

@@ -9,6 +9,5 @@
         void Update(T entity);
         void Insert(T entity);
         void Delete(T entity);
-        void Delete(ICollection<T> entityes);
     }
 }

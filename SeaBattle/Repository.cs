@@ -73,18 +73,8 @@
                 return;
             }
             var query = $"delete from {TableName} where id = {entity.Id}";
+            ExecuteQuery(query);
           //  DAL.Query(query);
-        }
-
-        public void Delete(ICollection<T> entityes)
-        {
-            var collectionId = IdentityCollectionToSqlIdFormat(entityes);
-            if (string.IsNullOrEmpty(collectionId))
-            {
-                return;
-            }
-            var query = $"delete from {TableName} where id in ({collectionId})";
-         //   DAL.Query(query);
         }
 
         public ICollection<T> GetAll()
