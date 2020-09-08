@@ -1,12 +1,8 @@
 ﻿namespace SeaBattle
 {
     using SeaBattleBasic;
-    using SeaBattleBasic.Ships;
-    using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Reflection;
     using СustomORM;
 
@@ -22,42 +18,6 @@
             }
         }
 
-        protected T DataRowToModel(DataRow dr)
-        {
-            if (dr == null)
-            {
-                return null;
-            }
-
-            object result = new object();
-            switch (typeof(T).FullName)
-            {
-                case "MilitaryShip":
-                    result = new MilitaryShip()
-                    {
-                        Id = dr.Field<int>("id"),
-                        Length = dr.Field<int>("Length"),
-                        Range = dr.Field<int>("Range"),
-                        Dx = dr.Field<int>("Dx"),
-                        Dy = dr.Field<int>("Dy"),
-                        PlayingFieldId = dr.Field<int>("PlayingFieldId"),
-                        ShipTypeId = dr.Field<int>("ShipTypeId")
-                    };
-                    break;
-            }
-            return (T)result;
-        }
-
-        protected ICollection<T> DataTableToCollection(DataTable dt)
-        {
-            if (dt == null)
-            {
-                return null;
-            }
-            return dt.AsEnumerable().Select(x => DataRowToModel(x)).ToList();
-        }
-
-    
         public string GetById(int id)
         {
             string result = "";
