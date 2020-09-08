@@ -54,8 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractRepository.cs" />
-    <Compile Include="DAL.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="DataSetGenerator.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Program.cs" />

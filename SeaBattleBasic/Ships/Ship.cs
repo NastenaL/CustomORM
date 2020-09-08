@@ -1,10 +1,8 @@
 ﻿namespace SeaBattleBasic.Ships
 {
     using SeaBattleBasic.Interfaces;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
-    [Table("Ship")]
     public abstract class Ship : BaseEntity, IAbstractShip
     {
         public Ship()
@@ -12,31 +10,11 @@
             this.Move();
         }
 
-        [Column("Length")]
         public int Length { get; set; }
-
-        [Column("Range")]
         public int Range { get; set; }
-
-        [NotMapped]
-        public bool IsPoint
-        {
-            get
-            {
-                return Length == 1;
-            }
-        }
-
-        [Column("Dx")]
         public int Dx { get; set; }
-
-        [Column("Dy")]
         public int Dy { get; set; }
-
-        [Column("ShipTypeId")]
-        public ShipType ShipTypeId { get; set; }
-
-        [Column("PlayingFieldId")]
+        public int ShipTypeId { get; set; }
         public int PlayingFieldId { get; set; }
 
 
@@ -73,7 +51,7 @@
         {
             bool res;
             res = a.GetType() == b.GetType() &&
-                  b.IsPoint && a.IsPoint;
+                  b.Length == 1 && a.Length == 1;
             return res;
         }
 

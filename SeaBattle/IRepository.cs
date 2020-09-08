@@ -3,12 +3,10 @@
     using System.Collections.Generic;
     interface IRepository<T> where T : class
     {
-        T GetById(int id);
-        ICollection<T> GetAll();
-        ICollection<T> GetAll(string where);
+        void GetById(int id);
+        void GetAll();
         void Update(T entity);
         void Insert(T entity);
         void Delete(T entity);
-        void Delete(ICollection<T> entityes);
     }
 }
