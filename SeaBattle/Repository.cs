@@ -62,7 +62,22 @@
             
             var query = $"select * from {TableName} where id = {id}";
             ExecuteQuery(query);
-          //  return DataRowToModel(dr);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                T res;
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                      //  res = reader.GetValue(0);
+                        //add to res
+                    }
+                }
+                reader.Close();
+            }
         }
 
         public void Delete(T entity)
@@ -83,9 +98,16 @@
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataReader reader = command.ExecuteReader();
+                List<T> res = new List<T>();
+                if (reader.HasRows) 
+                {
+                    while (reader.Read()) 
+                    {
+                       //add to res
+                    }
+                }
                 reader.Close();
-            }
-            
+            }  
         }
 
         public void Update(T entity)

@@ -56,6 +56,7 @@
 
             //shipRepository.Delete(auxiliaryShip);
             shipRepository.GetAll();
+            shipRepository.GetById(2);
             Console.ReadKey();
         }
     }
