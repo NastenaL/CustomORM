@@ -59,24 +59,26 @@
     
         public void GetById(int id)
         {
+            var fields = typeof(T).GetProperties();
+
+            string columns = "";
             
+            foreach (PropertyInfo property in fields)
+            {
+                columns += property.Name + ",";
+               // values += "'" + GetPropValue(entity, property.Name) + "'" + ",";
+            }
+            columns = columns.Remove(columns.Length - 1);
+            
+
             var query = $"select * from {TableName} where id = {id}";
             ExecuteQuery(query);
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
-                SqlDataReader reader = command.ExecuteReader();
-                T res;
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                      //  res = reader.GetValue(0);
-                        //add to res
-                    }
-                }
-                reader.Close();
+                command.ExecuteNonQuery().;
             }
         }
 

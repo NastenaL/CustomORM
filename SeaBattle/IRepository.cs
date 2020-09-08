@@ -1,6 +1,5 @@
 ﻿namespace СustomORM
 {
-    using System.Collections.Generic;
     interface IRepository<T> where T : class
     {
         void GetById(int id);
