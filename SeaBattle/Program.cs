@@ -49,14 +49,14 @@
             };
 
             Repository<Ship> shipRepository = new Repository<Ship>();
-            shipRepository.Insert(militaryShip);
-            shipRepository.Insert(auxiliaryShip);
+           // shipRepository.Insert(militaryShip);
+            //shipRepository.Insert(auxiliaryShip);
             //militaryShip.Length = 3;
             //shipRepository.Update(militaryShip);
 
             //shipRepository.Delete(auxiliaryShip);
             shipRepository.GetAll();
-            shipRepository.GetById(2);
+            Console.WriteLine(shipRepository.GetById(2));
             Console.ReadKey();
         }
     }

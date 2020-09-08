@@ -2,6 +2,7 @@
 {
     using SeaBattleBasic;
     using SeaBattleBasic.Ships;
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
@@ -57,34 +58,34 @@
         }
 
     
-        public void GetById(int id)
+        public string GetById(int id)
         {
-            var t = DataSetGenerator.ShipDataSet();
-            
-            DataTable firstTable = t.Tables[0];
-            var rows = firstTable.AsEnumerable().Where(r => r.Field<int>("Id") == id);
-
-            var fields = typeof(T).GetProperties();
-
-            string columns = "";
-            
-            foreach (PropertyInfo property in fields)
-            {
-                columns += property.Name + ",";
-               // values += "'" + GetPropValue(entity, property.Name) + "'" + ",";
-            }
-            columns = columns.Remove(columns.Length - 1);
-            
-
+            string result = "";
             var query = $"select * from {TableName} where id = {id}";
-            ExecuteQuery(query);
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
-                command.ExecuteNonQuery();
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while(reader.Read())
+                    {
+                        result = "Ship #" + reader["Id"] + " was founded " +
+                                  " Range = "+ reader["Range"] + 
+                                  " Length = " + reader["Length"] + 
+                                  " Dx = " + reader["Dx"] + 
+                                  " Dy = " + reader["Dy"] + "\n";
+                    }    
+                }
+                finally
+                {
+                    // Always call Close when done reading.
+                    reader.Close();
+                }
             }
+            return result;
         }
 
         public void Delete(T entity)
