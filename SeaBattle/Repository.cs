@@ -8,8 +8,6 @@
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
-
         protected string TableName
         {
             get
@@ -22,7 +20,7 @@
         {
             string result = "";
             var query = $"select * from {TableName} where id = {id}";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -41,7 +39,6 @@
                 }
                 finally
                 {
-                    // Always call Close when done reading.
                     reader.Close();
                 }
             }
@@ -54,15 +51,15 @@
             {
                 return;
             }
-            var query = $"delete from {TableName} where id = {entity.Id}";
-            ExecuteQuery(query);
+            var deleteQuery = $"delete from {TableName} where id = {entity.Id}";
+            ExecuteQuery(deleteQuery);
         }
 
         public List<string> GetAll()
         {
             List<string> result = new List<string>();
             var query = $"select * from {TableName}";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -99,8 +96,8 @@
             columnsValues = columnsValues.Remove(columnsValues.Length - 1);
 
             var id = entity.Id;
-            var query = $"update {TableName} set {columnsValues} where Id = {id}";
-            ExecuteQuery(query);
+            var updateQuery = $"update {TableName} set {columnsValues} where Id = {id}";
+            ExecuteQuery(updateQuery);
         }
 
         public void Insert(T entity)
@@ -117,8 +114,8 @@
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
 
-            var query = $"insert into {TableName} ({columns}) values ({values})";
-            ExecuteQuery(query);
+            var insertQuery = $"insert into {TableName} ({columns}) values ({values})";
+            ExecuteQuery(insertQuery);
         }
 
         public static object GetPropValue(object src, string propName)
@@ -128,7 +125,7 @@
 
         private void ExecuteQuery(string query)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
