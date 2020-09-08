@@ -4,7 +4,6 @@
     using SeaBattleBasic.Ships;
     using System;
 
-
     class Program
     {
         static void Main(string[] args)
@@ -48,8 +47,8 @@
             };
 
             Repository<Ship> shipRepository = new Repository<Ship>();
-            shipRepository.Insert(militaryShip);
-            shipRepository.Insert(auxiliaryShip);
+           // shipRepository.Insert(militaryShip);
+           // shipRepository.Insert(auxiliaryShip);
 
             Console.ReadKey();
         }

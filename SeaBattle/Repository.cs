@@ -111,6 +111,7 @@
         {
 
         }
+
         public void Insert(T entity)
         {
             var r = typeof(T);
@@ -125,7 +126,7 @@
             }
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
-            //string values = GetPropValue(entity);
+
             var query = $"insert into {TableName} ({columns}) values ({values})";
             ExecuteQuery(query);
         }
