@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     interface IRepository<T> where T : class
     {
-        object GetById(int id);
+        T GetById(int id);
         List<object> GetAll();
         void Update(T entity);
         void Insert(T entity);

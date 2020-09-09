@@ -17,7 +17,7 @@
             }
         }
 
-        public object GetById(int id)
+        public T GetById(int id)
         {
             List<object> r = new List<object>();
             var query = $"select * from {TableName} where id = {id}";
@@ -44,7 +44,7 @@
                 }
             }
             object rdsc = r;
-            return rdsc;
+            return (T)rdsc;
         }
 
         public void Delete(T entity)
@@ -59,7 +59,9 @@
 
         public List<object> GetAll()
         {
-            List<object> r = new List<object>();
+            var propertyLength = typeof(T).GetProperties().Length;
+            List<object> entity = new List<object>();
+            List<object> E = new List<object>();
             var query = $"select * from {TableName}";
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
@@ -72,10 +74,19 @@
                 {
                     while (reader.Read())
                     {
+
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            r.Add(reader[i]);
+                            
+                            if (i % propertyLength - 1 == 0)
+                            {
+                                E.Add(entity);
+                                entity = new List<object>();
+                            }
+                            entity.Add(reader[i]);
+
                         }
+                       
                     }
                 }
                 finally
@@ -83,7 +94,7 @@
                     reader.Close();
                 }
             }
-            return r;
+            return entity;
         }
 
         public void Update(T entity)
