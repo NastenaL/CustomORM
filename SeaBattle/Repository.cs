@@ -16,9 +16,9 @@
             }
         }
 
-        public string GetById(int id)
+        public List<object> GetById(int id)
         {
-            string result = "";
+            List<object> r = new List<object>();
             var query = $"select * from {TableName} where id = {id}";
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
@@ -30,19 +30,19 @@
                 {
                     while(reader.Read())
                     {
-                        result = "Ship #" + reader.GetInt32(0) + " was founded " +
-                                  "  " + reader.GetInt32(1) +
-                                  "  " + reader.GetInt32(2) +
-                                  "  " + reader.GetInt32(3) +
-                                  "  " + reader.GetInt32(4) + "\n";
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            r.Add(reader[i]);
+                        }
                     }    
                 }
                 finally
                 {
+                    command.Dispose();
                     reader.Close();
                 }
             }
-            return result;
+            return r;
         }
 
         public void Delete(T entity)
@@ -55,9 +55,9 @@
             ExecuteQuery(deleteQuery);
         }
 
-        public List<string> GetAll()
+        public List<object> GetAll()
         {
-            List<string> result = new List<string>();
+            List<object> r = new List<object>();
             var query = $"select * from {TableName}";
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
@@ -65,15 +65,15 @@
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
+                
                 try
                 {
                     while (reader.Read())
                     {
-                        result.Add("Ship #" + reader.GetInt32(0) + " was founded " +
-                                  "  " + reader.GetInt32(1) +
-                                  "  " + reader.GetInt32(2) +
-                                  "  " + reader.GetInt32(3) +
-                                  "  " + reader.GetInt32(4) + "\n");
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            r.Add(reader[i]);
+                        }
                     }
                 }
                 finally
@@ -81,7 +81,7 @@
                     reader.Close();
                 }
             }
-            return result;
+            return r;
         }
 
         public void Update(T entity)
