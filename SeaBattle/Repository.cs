@@ -3,7 +3,6 @@
     using SeaBattleBasic;
     using System.Collections.Generic;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Reflection;
     using СustomORM;
 
@@ -91,10 +90,11 @@
                 }
                 finally
                 {
+                    command.Dispose();
                     reader.Close();
                 }
             }
-            return entity;
+            return Entities;
         }
 
         public void Update(T entity)
