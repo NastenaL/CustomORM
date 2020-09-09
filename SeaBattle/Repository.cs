@@ -61,7 +61,7 @@
         {
             var propertyLength = typeof(T).GetProperties().Length;
             List<object> entity = new List<object>();
-            List<object> E = new List<object>();
+            List<object> Entities = new List<object>();
             var query = $"select * from {TableName}";
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
@@ -78,9 +78,9 @@
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             
-                            if (i % propertyLength - 1 == 0)
+                            if (i % propertyLength  == 0 && entity.Count != 0)
                             {
-                                E.Add(entity);
+                                Entities.Add(entity);
                                 entity = new List<object>();
                             }
                             entity.Add(reader[i]);
