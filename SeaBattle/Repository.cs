@@ -1,8 +1,11 @@
 ﻿namespace SeaBattle
 {
     using SeaBattleBasic;
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Reflection;
     using СustomORM;
 
@@ -56,7 +59,7 @@
             ExecuteQuery(deleteQuery);
         }
 
-        public List<object> GetAll()
+        public List<T> GetAll()
         {
             var propertyLength = typeof(T).GetProperties().Length;
             List<object> entity = new List<object>();
@@ -65,7 +68,6 @@
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 
@@ -83,9 +85,7 @@
                                 entity = new List<object>();
                             }
                             entity.Add(reader[i]);
-
                         }
-                       
                     }
                 }
                 finally
@@ -94,8 +94,9 @@
                     reader.Close();
                 }
             }
-            return Entities;
+            return Entities.Cast<T>().ToList();
         }
+
 
         public void Update(T entity)
         {

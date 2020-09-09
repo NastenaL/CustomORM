@@ -56,8 +56,8 @@
             //shipRepository.Update(militaryShip);
 
             //shipRepository.Delete(auxiliaryShip);
-            //Ship re = shipRepository.GetById(8);
-            List<object> res = shipRepository.GetAll();
+            Ship re = shipRepository.GetById(8);
+            //var res = shipRepository.GetAll();
 
             Console.ReadKey();
         }
