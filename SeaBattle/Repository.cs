@@ -3,6 +3,7 @@
     using SeaBattleBasic;
     using System.Collections.Generic;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Reflection;
     using СustomORM;
 
@@ -16,7 +17,7 @@
             }
         }
 
-        public List<object> GetById(int id)
+        public object GetById(int id)
         {
             List<object> r = new List<object>();
             var query = $"select * from {TableName} where id = {id}";
@@ -42,11 +43,12 @@
                     reader.Close();
                 }
             }
-            return r;
+            object rdsc = r;
+            return rdsc;
         }
 
         public void Delete(T entity)
-        {
+        { 
             if (entity.Id == 0)
             {
                 return;
