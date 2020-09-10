@@ -4,6 +4,7 @@
     using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System;
+    using System.Collections.Generic;
 
     class Program
     {
@@ -29,15 +30,22 @@
             //shipTypeRepository.Insert(military);
             //shipTypeRepository.Insert(auxiliary);
             //shipTypeRepository.Insert(mix);
+            MixShip mixShip = new MixShip
+            {
+                Id = 1,
+                Dx = 3,
+                Dy = 1,
+                Range = 1,
+                Length = 2
+            };
 
             AuxiliaryShip auxiliaryShip = new AuxiliaryShip
             {
-                Id = 2,
-                Dx = 1,
+                Id = 1,
+                Dx = 2,
                 Dy = 0,
-                Range = 1,
-                Length = 2,
-                ShipTypeId = 2
+                Range = 3,
+                Length = 5
             };
      
             MilitaryShip militaryShip = new MilitaryShip
@@ -47,19 +55,18 @@
                 Dy = 0,
                 Range = 1,
                 Length = 2,
-                ShipTypeId = 1
+
             };
 
-            Repository<Ship> shipRepository = new Repository<Ship>();
-            // shipRepository.Insert(militaryShip);
-            //shipRepository.Insert(auxiliaryShip);
-            //militaryShip.Length = 3;
-            //shipRepository.Update(militaryShip);
-
-            //shipRepository.Delete(auxiliaryShip);
-            //Ship re = shipRepository.GetById(8);
-            var res = shipRepository.GetAll();
-
+            Repository<MixShip> mixShipRepository = new Repository<MixShip>();
+            //mixShipRepository.Insert(mixShip);
+            var mixShips = mixShipRepository.GetAll();
+            Repository<AuxiliaryShip> auxiliaryShipRepository = new Repository<AuxiliaryShip>();
+            //auxiliaryShipRepository.Insert(auxiliaryShip);
+            var auxiliaryShips = auxiliaryShipRepository.GetAll();
+            List<Ship> ships = new List<Ship>();
+            ships.AddRange(mixShips);
+            ships.AddRange(auxiliaryShips);
             Console.ReadKey();
         }
     }

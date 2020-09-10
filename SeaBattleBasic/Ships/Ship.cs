@@ -15,7 +15,6 @@
         public int Range { get; set; }
         public int Dx { get; set; }
         public int Dy { get; set; }
-        public int ShipTypeId { get; set; }
         public int PlayingFieldId { get; set; }
 
 
