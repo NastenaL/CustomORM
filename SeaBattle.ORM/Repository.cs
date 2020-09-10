@@ -1,11 +1,9 @@
-﻿namespace SeaBattle
+﻿namespace SeaBattle.ORM
 {
-    using SeaBattle.ORM;
-    using SeaBattleBasic;
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Reflection;
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
@@ -17,7 +15,6 @@
                 return typeof(T).Name;
             }
         }
-
         public T GetById(int id)
         {
             List<object> r = new List<object>();
@@ -25,18 +22,17 @@
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 try
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             r.Add(reader[i]);
                         }
-                    }    
+                    }
                 }
                 finally
                 {
@@ -47,9 +43,8 @@
             object rdsc = r;
             return (T)rdsc;
         }
-
         public void Delete(T entity)
-        { 
+        {
             if (entity.Id == 0)
             {
                 return;
@@ -57,7 +52,6 @@
             var deleteQuery = $"delete from {TableName} where id = {entity.Id}";
             ExecuteQuery(deleteQuery);
         }
-
         public List<T> GetAll()
         {
             var propertyLength = typeof(T).GetProperties().Length;
@@ -69,16 +63,15 @@
                 SqlCommand command = new SqlCommand(query, connection);
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                
+
                 try
                 {
                     while (reader.Read())
                     {
-
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            
-                            if (i % propertyLength  == 0 && entity.Count != 0)
+
+                            if (i % propertyLength == 0 && entity.Count != 0)
                             {
                                 Entities.Add(entity);
                                 entity = new List<object>();
@@ -93,50 +86,42 @@
                     reader.Close();
                 }
             }
-            var t = Entities.Cast<T>().ToList();
             return Entities.Cast<T>().ToList();
         }
-
 
         public void Update(T entity)
         {
             var fields = typeof(T).GetProperties();
-
             string columnsValues = "";
             foreach (PropertyInfo property in fields)
             {
                 columnsValues += property.Name + " = '" + GetPropValue(entity, property.Name) + "'" + ",";
             }
             columnsValues = columnsValues.Remove(columnsValues.Length - 1);
-
             var id = entity.Id;
             var updateQuery = $"update {TableName} set {columnsValues} where Id = {id}";
             ExecuteQuery(updateQuery);
         }
-
         public void Insert(T entity)
         {
             var fields = typeof(T).GetProperties();
-       
+
             string columns = "";
             string values = "";
-            foreach(PropertyInfo property in fields)
+            foreach (PropertyInfo property in fields)
             {
                 columns += property.Name + ",";
-                values += "'" +GetPropValue(entity, property.Name)+"'" + ",";
+                values += "'" + GetPropValue(entity, property.Name) + "'" + ",";
             }
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
-
             var insertQuery = $"insert into {TableName} ({columns}) values ({values})";
             ExecuteQuery(insertQuery);
         }
-
         public static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetProperty(propName).GetValue(src, null);
         }
-
         private void ExecuteQuery(string query)
         {
             using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))

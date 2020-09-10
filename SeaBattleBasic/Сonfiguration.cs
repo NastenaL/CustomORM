@@ -11,8 +11,5 @@
         public static int MinRange = 1;
         public static int MaxRange = 5;
 
-        //DB
-        public static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
-
     }
 }
