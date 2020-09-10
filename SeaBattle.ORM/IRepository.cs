@@ -1,7 +1,7 @@
-﻿namespace СustomORM
+﻿namespace SeaBattle.ORM
 {
     using System.Collections.Generic;
-    interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         T GetById(int id);
         List<T> GetAll();

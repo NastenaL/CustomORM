@@ -1,5 +1,6 @@
 ﻿namespace SeaBattleBasic.Ships
 {
+    using SeaBattle.ORM;
     using SeaBattleBasic.Interfaces;
     using System.Text;
 

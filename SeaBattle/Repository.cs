@@ -1,13 +1,12 @@
 ﻿namespace SeaBattle
 {
+    using SeaBattle.ORM;
     using SeaBattleBasic;
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
-    using СustomORM;
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
@@ -94,6 +93,7 @@
                     reader.Close();
                 }
             }
+            var t = Entities.Cast<T>().ToList();
             return Entities.Cast<T>().ToList();
         }
 

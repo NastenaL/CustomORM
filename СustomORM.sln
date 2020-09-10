@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattle", "SeaBattle\SeaBattle.csproj", "{7A0BB35D-0D8C-432E-9B83-30FCF2800EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattleBasic", "SeaBattleBasic\SeaBattleBasic.csproj", "{F1958BAF-DCFC-4B56-B504-12AADA94E73B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeaBattleBasic", "SeaBattleBasic\SeaBattleBasic.csproj", "{F1958BAF-DCFC-4B56-B504-12AADA94E73B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattle.ORM", "SeaBattle.ORM\SeaBattle.ORM.csproj", "{23D53291-EC62-4D46-B6F0-EFFDABB59E48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F1958BAF-DCFC-4B56-B504-12AADA94E73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1958BAF-DCFC-4B56-B504-12AADA94E73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1958BAF-DCFC-4B56-B504-12AADA94E73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D53291-EC62-4D46-B6F0-EFFDABB59E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D53291-EC62-4D46-B6F0-EFFDABB59E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D53291-EC62-4D46-B6F0-EFFDABB59E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D53291-EC62-4D46-B6F0-EFFDABB59E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

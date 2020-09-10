@@ -1,9 +1,9 @@
 ﻿namespace SeaBattle
 {
+    using SeaBattle.ORM;
     using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System;
-    using System.Collections.Generic;
 
     class Program
     {
@@ -39,6 +39,7 @@
                 Length = 2,
                 ShipTypeId = 2
             };
+     
             MilitaryShip militaryShip = new MilitaryShip
             {
                 Id = 1,
@@ -56,8 +57,8 @@
             //shipRepository.Update(militaryShip);
 
             //shipRepository.Delete(auxiliaryShip);
-            Ship re = shipRepository.GetById(8);
-            //var res = shipRepository.GetAll();
+            //Ship re = shipRepository.GetById(8);
+            var res = shipRepository.GetAll();
 
             Console.ReadKey();
         }

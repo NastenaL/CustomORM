@@ -1,4 +1,6 @@
-﻿namespace SeaBattleBasic
+﻿using SeaBattle.ORM;
+
+namespace SeaBattleBasic
 {
     public class ShipType : BaseEntity
     {
