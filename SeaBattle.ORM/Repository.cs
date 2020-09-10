@@ -6,8 +6,10 @@
     using System.Data.SqlClient;
     using System.Reflection;
 
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T : BaseEntity, new()
     {
+        readonly string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=SeaBattle;Integrated Security=True";
+
         protected string TableName
         {
             get
@@ -15,36 +17,36 @@
                 return typeof(T).Name;
             }
         }
+
         public T GetById(int id)
         {
-            List<object> r = new List<object>();
-            var query = $"select * from {TableName} where id = {id}";
-            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
+            var entity = new T();
+         
+            var dataAdapter = new SqlDataAdapter($"select * from {TableName} where Id= " + id, connectionString);
+            var dataTable = new DataTable();
+            dataAdapter.Fill(dataTable);
+
+            foreach (DataRow dataRow in dataTable.Rows)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                try
+                var item = Activator.CreateInstance<T>();
+                var type = typeof(T);
+
+                foreach (var propertyInfo in type.GetProperties())
                 {
-                    while (reader.Read())
-                    {
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            r.Add(reader[i]);
-                        }
-                    }
+                    var fieldName = propertyInfo.Name;
+                    var fieldValue = dataRow[fieldName];
+
+                    propertyInfo.SetValue(item, fieldValue, new object[] { });
                 }
-                finally
-                {
-                    command.Dispose();
-                    reader.Close();
-                }
+
+                entity = item;
             }
-            object rdsc = r;
-            return (T)rdsc;
+            dataAdapter.Dispose();
+            return entity;
         }
+
         public void Delete(T entity)
-        {
+        { 
             if (entity.Id == 0)
             {
                 return;
@@ -52,83 +54,82 @@
             var deleteQuery = $"delete from {TableName} where id = {entity.Id}";
             ExecuteQuery(deleteQuery);
         }
+
         public List<T> GetAll()
         {
-            var propertyLength = typeof(T).GetProperties().Length;
-            List<object> entity = new List<object>();
-            List<object> Entities = new List<object>();
-            var query = $"select * from {TableName}";
-            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
+            var entities = new List<T>();
+
+            var dataAdapter = new SqlDataAdapter($"select * from {TableName}", connectionString);
+            var dataTable = new DataTable();
+            dataAdapter.Fill(dataTable);
+
+            foreach (DataRow dataRow in dataTable.Rows)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                var item = Activator.CreateInstance<T>();
+                var type = typeof(T);
 
-                try
+                foreach (var propertyInfo in type.GetProperties())
                 {
-                    while (reader.Read())
-                    {
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
+                    var fieldName = propertyInfo.Name;
+                    var fieldValue = dataRow[fieldName];
 
-                            if (i % propertyLength == 0 && entity.Count != 0)
-                            {
-                                Entities.Add(entity);
-                                entity = new List<object>();
-                            }
-                            entity.Add(reader[i]);
-                        }
-                    }
+                    propertyInfo.SetValue(item, fieldValue, new object[] { });
                 }
-                finally
-                {
-                    command.Dispose();
-                    reader.Close();
-                }
+
+                entities.Add(item);
             }
-            return Entities.Cast<T>().ToList();
+
+            dataAdapter.Dispose();
+            return entities;
         }
 
         public void Update(T entity)
         {
             var fields = typeof(T).GetProperties();
+
             string columnsValues = "";
             foreach (PropertyInfo property in fields)
             {
                 columnsValues += property.Name + " = '" + GetPropValue(entity, property.Name) + "'" + ",";
             }
             columnsValues = columnsValues.Remove(columnsValues.Length - 1);
+
             var id = entity.Id;
             var updateQuery = $"update {TableName} set {columnsValues} where Id = {id}";
             ExecuteQuery(updateQuery);
         }
+
         public void Insert(T entity)
         {
             var fields = typeof(T).GetProperties();
-
+       
             string columns = "";
             string values = "";
-            foreach (PropertyInfo property in fields)
+            foreach(PropertyInfo property in fields)
             {
                 columns += property.Name + ",";
-                values += "'" + GetPropValue(entity, property.Name) + "'" + ",";
+                values += "'" +GetPropValue(entity, property.Name)+"'" + ",";
             }
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
+
             var insertQuery = $"insert into {TableName} ({columns}) values ({values})";
             ExecuteQuery(insertQuery);
         }
+
         public static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetProperty(propName).GetValue(src, null);
         }
+
         private void ExecuteQuery(string query)
         {
-            using (SqlConnection connection = new SqlConnection(Сonfiguration.connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
                 command.ExecuteNonQuery();
+                command.Dispose();
             }
         }
     }
