@@ -18,6 +18,8 @@
         public int Range { get; set; }
         public int Dx { get; set; }
         public int Dy { get; set; }
+
+        [RelatesEntity(TableName = "PlayingField", ColumnName = "PlayingFieldId")]
         public int PlayingFieldId { get; set; }
 
 

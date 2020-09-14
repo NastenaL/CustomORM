@@ -4,7 +4,6 @@
     using SeaBattleBasic;
     using SeaBattleBasic.Ships;
     using System;
-    using System.Collections.Generic;
 
     class Program
     {
@@ -58,8 +57,8 @@
             };
 
             Repository<MixShip> mixShipRepository = new Repository<MixShip>();
-            mixShip.Size = 1;
-            mixShipRepository.Update(mixShip);
+          //  mixShip.Size = 1;
+            //mixShipRepository.Update(mixShip);
            // mixShipRepository.Insert(mixShip);
             //var mixShips = mixShipRepository.GetAll();
             Repository<AuxiliaryShip> auxiliaryShipRepository = new Repository<AuxiliaryShip>();
@@ -68,6 +67,15 @@
             //List<Ship> ships = new List<Ship>();
             //ships.AddRange(mixShips);
             //ships.AddRange(auxiliaryShips);
+
+            PlayingField field = new PlayingField
+            {
+                Id = 1
+            };
+            
+            Repository<PlayingField> fieldRepository = new Repository<PlayingField>();
+            //fieldRepository.Insert(field);
+            var d = fieldRepository.GetById(1);
             Console.ReadKey();
         }
     }

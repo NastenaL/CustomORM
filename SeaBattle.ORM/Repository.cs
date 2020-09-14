@@ -31,7 +31,7 @@
             {
                 var item = Activator.CreateInstance<T>();
                 var type = typeof(T);
-
+                
                 foreach (var propertyInfo in type.GetProperties())
                 {
                     var fieldName = propertyInfo.Name;
@@ -41,7 +41,7 @@
                 }
 
                 entity = item;
-            }
+            }          
             dataAdapter.Dispose();
             return entity;
         }
@@ -59,7 +59,7 @@
         public List<T> GetAll()
         {
             var entities = new List<T>();
-
+            
             var dataAdapter = new SqlDataAdapter($"select * from {TableName}", connectionString);
             var dataTable = new DataTable();
             dataAdapter.Fill(dataTable);
@@ -122,22 +122,32 @@
         {
             var fields = typeof(T).GetProperties();
 
+            var ignoredProperties = GetIgnoredProperties<T>(entity);
+          
             Dictionary<string, string> mappingProperties = WriteColumnMappings<T>(entity);
 
             string columns = "";
             string values = "";
             foreach(PropertyInfo property in fields)
             {
-                columns += property.Name + ",";
-                values += "'" +GetPropValue(entity, property.Name)+"'" + ",";
+                string wrongProperty = ignoredProperties.Find(a => a == property.Name);
+                if (string.IsNullOrEmpty(wrongProperty))
+                {
+                    columns += property.Name + ",";
+                    values += "'" + GetPropValue(entity, property.Name) + "'" + ",";
+                }
             }
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
 
-            foreach(KeyValuePair<string, string> property in mappingProperties)
+            if(mappingProperties.Count > 0)
             {
-                columns = columns.Replace(property.Key, property.Value);
+                foreach (KeyValuePair<string, string> property in mappingProperties)
+                {
+                    columns = columns.Replace(property.Key, property.Value);
+                }
             }
+
             var insertQuery = $"insert into {TableName} ({columns}) values ({values})";
             ExecuteQuery(insertQuery);
         }
@@ -147,6 +157,29 @@
             return src.GetType().GetProperty(propName).GetValue(src, null);
         }
 
+        private List<string> GetIgnoredProperties<T>(T item) where T:new()
+        {
+            List<string> result = new List<string>();
+            var type = item.GetType();
+
+            var properties = item.GetType().GetProperties();
+
+            foreach (var property in properties)
+            {
+                var attributes = property.GetCustomAttributes(false);
+
+                var columnMapping = attributes
+                    .FirstOrDefault(a => a.GetType() == typeof(IgnorePropertyAttribute));
+                if (columnMapping != null)
+                {
+                    var mapsTo = columnMapping as IgnorePropertyAttribute;
+                    result.Add(property.Name);
+
+                }
+            }
+            return result;
+        }
+       
         private Dictionary<string,string> WriteColumnMappings<T>(T item) where T : new()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();

@@ -5,16 +5,18 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Drawing;
     using System.Linq;
+    using SeaBattle.ORM;
     using SeaBattleBasic.Ships;
 
     [Table("PlayingField")]
-    public class PlayingField
+    public class PlayingField : BaseEntity
     {
         public PlayingField()
         {
             this.Ships = new Dictionary<Point, Ship>();
         }
 
+        [IgnoreProperty]
         private Ship[] indexArr = new Ship[5];
         public Ship[] AddToIndexArr(int size, Ship value)
         {
@@ -26,12 +28,14 @@
             return indexArr;
         }
 
+        [IgnoreProperty]
         public Ship this[int q]
         {
             get { return indexArr[q]; }
             set { indexArr[q] = value; }
         }
 
+        [IgnoreProperty]
         public Dictionary<Point, Ship> Ships { get; set; }
 
         public Ship AddShip(Point startPoint, ShipType type)
