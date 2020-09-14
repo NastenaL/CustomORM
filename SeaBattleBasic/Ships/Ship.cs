@@ -2,8 +2,10 @@
 {
     using SeaBattle.ORM;
     using SeaBattleBasic.Interfaces;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
+    [Table("Ship")]
     public abstract class Ship : BaseEntity, IAbstractShip
     {
         public Ship()
@@ -11,7 +13,8 @@
             this.Move();
         }
 
-        public int Length { get; set; }
+        [RedefineColumn("Length")]
+        public int  Size { get; set; }
         public int Range { get; set; }
         public int Dx { get; set; }
         public int Dy { get; set; }
@@ -51,7 +54,7 @@
         {
             bool res;
             res = a.GetType() == b.GetType() &&
-                  b.Length == 1 && a.Length == 1;
+                  b.Size == 1 && a.Size == 1;
             return res;
         }
 

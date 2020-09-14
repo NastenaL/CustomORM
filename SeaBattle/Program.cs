@@ -32,41 +32,42 @@
             //shipTypeRepository.Insert(mix);
             MixShip mixShip = new MixShip
             {
-                Id = 1,
-                Dx = 3,
-                Dy = 1,
-                Range = 1,
-                Length = 2
+                Id = 3,
+                Dx = 0,
+                Dy = 2,
+                Range = 4,
+                Size = 3
             };
 
             AuxiliaryShip auxiliaryShip = new AuxiliaryShip
             {
-                Id = 1,
+                Id = 5,
                 Dx = 2,
                 Dy = 0,
                 Range = 3,
-                Length = 5
+                Size = 5
             };
      
             MilitaryShip militaryShip = new MilitaryShip
             {
-                Id = 1,
+                Id = 6,
                 Dx = 1,
                 Dy = 0,
                 Range = 1,
-                Length = 2,
-
+                Size = 2,
             };
 
             Repository<MixShip> mixShipRepository = new Repository<MixShip>();
-            //mixShipRepository.Insert(mixShip);
-            var mixShips = mixShipRepository.GetAll();
+            mixShip.Size = 1;
+            mixShipRepository.Update(mixShip);
+           // mixShipRepository.Insert(mixShip);
+            //var mixShips = mixShipRepository.GetAll();
             Repository<AuxiliaryShip> auxiliaryShipRepository = new Repository<AuxiliaryShip>();
             //auxiliaryShipRepository.Insert(auxiliaryShip);
-            var auxiliaryShips = auxiliaryShipRepository.GetAll();
-            List<Ship> ships = new List<Ship>();
-            ships.AddRange(mixShips);
-            ships.AddRange(auxiliaryShips);
+            //var auxiliaryShips = auxiliaryShipRepository.GetAll();
+            //List<Ship> ships = new List<Ship>();
+            //ships.AddRange(mixShips);
+            //ships.AddRange(auxiliaryShips);
             Console.ReadKey();
         }
     }

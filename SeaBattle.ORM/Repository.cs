@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Reflection;
 
     public class Repository<T> : IRepository<T> where T : BaseEntity, new()
@@ -86,11 +87,29 @@
         public void Update(T entity)
         {
             var fields = typeof(T).GetProperties();
+            Dictionary<string, string> mappingProperties = WriteColumnMappings<T>(entity);
 
             string columnsValues = "";
-            foreach (PropertyInfo property in fields)
+           List<string> columns = new List<string>();
+            foreach(PropertyInfo field in fields)
             {
-                columnsValues += property.Name + " = '" + GetPropValue(entity, property.Name) + "'" + ",";
+                columns.Add(field.Name);
+            }
+            foreach (KeyValuePair<string, string> keyValue in mappingProperties)
+            {
+                var oldPropertyValue = fields.FirstOrDefault(r => r.Name == keyValue.Key);
+                var oldPropertyIndex = columns.FindIndex(a => a == oldPropertyValue.Name);
+                columns[oldPropertyIndex] = keyValue.Value;
+            }
+            foreach (string column in columns)
+            {
+                var oldProp = mappingProperties.FirstOrDefault(a => a.Value == column);
+                var prop = column;
+                if(oldProp.Key != null)
+                {
+                    prop = oldProp.Key;
+                }
+                columnsValues += column + " = '" + GetPropValue(entity, prop) + "'" + ",";
             }
             columnsValues = columnsValues.Remove(columnsValues.Length - 1);
 
@@ -102,7 +121,9 @@
         public void Insert(T entity)
         {
             var fields = typeof(T).GetProperties();
-       
+
+            Dictionary<string, string> mappingProperties = WriteColumnMappings<T>(entity);
+
             string columns = "";
             string values = "";
             foreach(PropertyInfo property in fields)
@@ -113,6 +134,10 @@
             columns = columns.Remove(columns.Length - 1);
             values = values.Remove(values.Length - 1);
 
+            foreach(KeyValuePair<string, string> property in mappingProperties)
+            {
+                columns = columns.Replace(property.Key, property.Value);
+            }
             var insertQuery = $"insert into {TableName} ({columns}) values ({values})";
             ExecuteQuery(insertQuery);
         }
@@ -120,6 +145,29 @@
         public static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
+        private Dictionary<string,string> WriteColumnMappings<T>(T item) where T : new()
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            var type = item.GetType();
+
+            var properties = item.GetType().GetProperties();
+           
+            foreach (var property in properties)
+            {
+                var attributes = property.GetCustomAttributes(false);
+    
+                var columnMapping = attributes
+                    .FirstOrDefault(a => a.GetType() == typeof(RedefineColumnAttribute));
+                if (columnMapping != null)
+                {
+                    var mapsTo = columnMapping as RedefineColumnAttribute;
+                    result.Add(property.Name, mapsTo.newName);
+                 
+                }
+            }
+            return result;
         }
 
         private void ExecuteQuery(string query)

@@ -106,7 +106,7 @@
             Random random = new Random();
             ship.Dx = random.Next(Сonfiguration.MinMovementVector, Сonfiguration.MaxMovementVector);
             ship.Dy = random.Next(Сonfiguration.MinMovementVector, Сonfiguration.MaxMovementVector);
-            ship.Length = random.Next(Сonfiguration.MinLength, Сonfiguration.MaxLength);
+            ship.Size = random.Next(Сonfiguration.MinLength, Сonfiguration.MaxLength);
         }
 
         private double GetCenterDistance(Point coordinates)
