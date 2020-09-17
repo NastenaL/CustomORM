@@ -75,6 +75,7 @@
             
             Repository<PlayingField> fieldRepository = new Repository<PlayingField>();
             //fieldRepository.Insert(field);
+      
             var d = fieldRepository.GetById(1);
             Console.ReadKey();
         }

@@ -1,6 +1,7 @@
 ﻿namespace SeaBattle.ORM
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
@@ -19,11 +20,11 @@
             }
         }
 
-        public T GetById(int id)
+        private T FindElement(int id, string query)
         {
             var entity = new T();
-         
-            var dataAdapter = new SqlDataAdapter($"select * from {TableName} where Id= " + id, connectionString);
+
+            var dataAdapter = new SqlDataAdapter(query, connectionString);
             var dataTable = new DataTable();
             dataAdapter.Fill(dataTable);
 
@@ -31,18 +32,45 @@
             {
                 var item = Activator.CreateInstance<T>();
                 var type = typeof(T);
-                
-                foreach (var propertyInfo in type.GetProperties())
-                {
-                    var fieldName = propertyInfo.Name;
-                    var fieldValue = dataRow[fieldName];
+                var ignoredProperties = GetIgnoredProperties<T>(entity);
 
-                    propertyInfo.SetValue(item, fieldValue, new object[] { });
+                var properties = type.GetProperties();
+
+                foreach (var propertyInfo in properties)
+                {
+                    object fieldValue = null;
+                    string wrongProperty = ignoredProperties.Find(a => a == propertyInfo.Name);
+                    if (string.IsNullOrEmpty(wrongProperty))
+                    {
+                        var fieldName = propertyInfo.Name;
+                        fieldValue = dataRow[fieldName];
+                        propertyInfo.SetValue(item, fieldValue, new object[] { });
+                    }
                 }
 
                 entity = item;
-            }          
+            }
             dataAdapter.Dispose();
+            return entity;
+        }
+
+        public T GetById(int id)
+        {
+            string query = $"select * from {TableName} where Id= " + id;
+            var entity =  FindElement(id, query);
+
+            var relatedAttributes = GetRelatedAttributes(entity);
+            if(relatedAttributes.Count > 0)
+            {
+                foreach(RelatedAttribute attribute in relatedAttributes)
+                {
+                    string query1 = $"select * from {attribute.TableName} where {attribute.ColumnName}= " + id;
+                    var refEntities = GetElements(query1, attribute.PropertyName);
+
+                    var entityProperty = typeof(T).GetProperty(attribute.PropertyName);
+                    entityProperty.SetValue(entity, refEntities, null);
+                }
+            }
             return entity;
         }
 
@@ -56,10 +84,70 @@
             ExecuteQuery(deleteQuery);
         }
 
+        private IList GetElements(string query, string propertyName)
+        {
+            var entities = new List<T>();
+            var item = Activator.CreateInstance<T>();
+            var type = typeof(T);
+
+            var properties = type.GetProperties();
+
+            var entityProperty = typeof(T).GetProperty(propertyName);
+
+            IList refEntities = (IList)Activator.CreateInstance(entityProperty.PropertyType);
+
+            Dictionary<string, string> mappingProperties = WriteColumnMappings<List<T>>(entities);
+            T resultEntity = new T();
+
+            var dataAdapter = new SqlDataAdapter(query, connectionString);
+            var dataTable = new DataTable();
+            dataAdapter.Fill(dataTable);
+
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                var e = entityProperty.PropertyType.AssemblyQualifiedName;
+                var refType = Type.GetType(e, true);
+       
+
+                if (refType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var itemType = refType.GetGenericArguments()[0];
+                    var refProperties = itemType.GetProperties();
+
+                    var entitiesList = Activator.CreateInstance(itemType);
+
+                    var atrributes = WriteColumnMappings(entitiesList);
+
+                    foreach (var propertyInfo in refProperties)
+                    {
+                        var attribute = atrributes.FirstOrDefault(a => a.Key == propertyInfo.Name);
+                        var fieldName = attribute.Key == null ? propertyInfo.Name : attribute.Value;
+
+                        if (mappingProperties.Count > 0)
+                        {
+                            var mappingProperty = mappingProperties.FirstOrDefault(t => t.Value == propertyInfo.Name);
+                            if (mappingProperty.Key != null)
+                            {
+                                fieldName = mappingProperty.Key;
+                            }
+                        }
+
+                        var fieldValue = dataRow[fieldName];
+
+                        propertyInfo.SetValue(entitiesList, fieldValue);
+                    }
+
+                    refEntities.Add(entitiesList);
+                }
+            }
+            dataAdapter.Dispose();
+            return refEntities;
+        }
+
         public List<T> GetAll()
         {
             var entities = new List<T>();
-            
+           
             var dataAdapter = new SqlDataAdapter($"select * from {TableName}", connectionString);
             var dataTable = new DataTable();
             dataAdapter.Fill(dataTable);
@@ -69,9 +157,13 @@
                 var item = Activator.CreateInstance<T>();
                 var type = typeof(T);
 
+                var atrr = WriteColumnMappings<T>(item);
+
                 foreach (var propertyInfo in type.GetProperties())
                 {
-                    var fieldName = propertyInfo.Name;
+                    var qwerty = atrr.FirstOrDefault(a => a.Key == propertyInfo.Name);
+                    var fieldName = qwerty.Key == null? propertyInfo.Name : qwerty.Value;
+
                     var fieldValue = dataRow[fieldName];
 
                     propertyInfo.SetValue(item, fieldValue, new object[] { });
@@ -193,11 +285,38 @@
     
                 var columnMapping = attributes
                     .FirstOrDefault(a => a.GetType() == typeof(RedefineColumnAttribute));
+
                 if (columnMapping != null)
                 {
                     var mapsTo = columnMapping as RedefineColumnAttribute;
                     result.Add(property.Name, mapsTo.newName);
-                 
+                }
+            }
+            return result;
+        }
+
+        private List<RelatedAttribute> GetRelatedAttributes<T>(T item) where T : new()
+        {
+            List<RelatedAttribute> result = new List<RelatedAttribute>();
+            var type = item.GetType();
+
+            var properties = item.GetType().GetProperties();
+
+            foreach (var property in properties)
+            {
+                var attributes = property.GetCustomAttributes(false);
+
+                var columnMapping = attributes
+                    .FirstOrDefault(a => a.GetType() == typeof(RelatedEntityAttribute));
+                if (columnMapping != null)
+                {
+                    var mapsTo = columnMapping as RelatedEntityAttribute;
+                    RelatedAttribute relatedAttribute = new RelatedAttribute();
+
+                    relatedAttribute.ColumnName = mapsTo.ColumnName;
+                    relatedAttribute.PropertyName = mapsTo.PropertyName;
+                    relatedAttribute.TableName = mapsTo.TableName;
+                    result.Add(relatedAttribute);
                 }
             }
             return result;

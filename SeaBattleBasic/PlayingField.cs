@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Drawing;
-    using System.Linq;
     using SeaBattle.ORM;
     using SeaBattleBasic.Ships;
 
@@ -13,7 +12,7 @@
     {
         public PlayingField()
         {
-            this.Ships = new Dictionary<Point, Ship>();
+            this.Ships = new List<MixShip>();
         }
 
         [IgnoreProperty]
@@ -36,7 +35,8 @@
         }
 
         [IgnoreProperty]
-        public Dictionary<Point, Ship> Ships { get; set; }
+        [RelatedEntity(TableName = "Ship", ColumnName = "PlayingFieldId", PropertyName ="Ships")]
+        public List<MixShip> Ships { get; set; }
 
         public Ship AddShip(Point startPoint, ShipType type)
         {
@@ -59,7 +59,7 @@
             }
 
             this.InitializeShip(ref ship, startPoint);
-            this.Ships.Add(startPoint, ship);
+            this.Ships.Add((MixShip)ship);
             AddToIndexArr(Ships.Count, ship);
             var i = this.GenerateIndex(this.GetQuadrant(startPoint), startPoint);
             return ship;
@@ -76,15 +76,15 @@
             return point;
         }
 
-        public Dictionary<Point, Ship> GetAllShips()
-        {
-            return this.SortByCenterDistance();
-        }
+        //public Dictionary<Point, Ship> GetAllShips()
+        //{
+        //    return this.SortByCenterDistance();
+        //}
 
-        private Dictionary<Point, Ship> SortByCenterDistance()
-        {
-            return this.Ships.OrderBy(obj => GetCenterDistance(obj.Key)).ToDictionary(obj => obj.Key, obj => obj.Value);
-        }
+        //private Dictionary<Point, Ship> SortByCenterDistance()
+        //{
+        //    return this.Ships.OrderBy(obj => GetCenterDistance(obj.Key)).ToDictionary(obj => obj.Key, obj => obj.Value);
+        //}
 
         private int GenerateIndex(byte quadrant, Point shipPoint)
         {
