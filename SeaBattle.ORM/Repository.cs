@@ -65,7 +65,7 @@
                 foreach(RelatedAttribute attribute in relatedAttributes)
                 {
                     string query1 = $"select * from {attribute.TableName} where {attribute.ColumnName}= " + id;
-                    var refEntities = GetElements(query1, attribute.PropertyName);
+                    var refEntities = GetElements(query1, attribute.PropertyName, attribute.TableName);
 
                     var entityProperty = typeof(T).GetProperty(attribute.PropertyName);
                     entityProperty.SetValue(entity, refEntities, null);
@@ -84,17 +84,18 @@
             ExecuteQuery(deleteQuery);
         }
 
-        private IList GetElements(string query, string propertyName)
+        private IList GetElements(string query, string propertyName, string referanceType)
         {
             var entities = new List<T>();
             var item = Activator.CreateInstance<T>();
             var type = typeof(T);
 
             var properties = type.GetProperties();
-
+             
             var entityProperty = typeof(T).GetProperty(propertyName);
 
-            IList refEntities = (IList)Activator.CreateInstance(entityProperty.PropertyType);
+            var refEntities = (IList)Activator.CreateInstance(entityProperty.PropertyType);
+       
 
             Dictionary<string, string> mappingProperties = WriteColumnMappings<List<T>>(entities);
             T resultEntity = new T();
@@ -105,18 +106,22 @@
 
             foreach (DataRow dataRow in dataTable.Rows)
             {
-                var e = entityProperty.PropertyType.AssemblyQualifiedName;
-                var refType = Type.GetType(e, true);
-       
+                var entityType = entityProperty.PropertyType.AssemblyQualifiedName;
+                var refType = Type.GetType(entityType, true);
 
                 if (refType.GetGenericTypeDefinition() == typeof(List<>))
                 {
+                 
                     var itemType = refType.GetGenericArguments()[0];
                     var refProperties = itemType.GetProperties();
 
-                    var entitiesList = Activator.CreateInstance(itemType);
+                    var childTypes = itemType.Assembly.GetTypes();
+                    var rType = childTypes.FirstOrDefault(i => i.Name == referanceType);
+                    var entity = Activator.CreateInstance(rType);
 
-                    var atrributes = WriteColumnMappings(entitiesList);
+                  
+
+                    var atrributes = WriteColumnMappings(entity);
 
                     foreach (var propertyInfo in refProperties)
                     {
@@ -133,11 +138,10 @@
                         }
 
                         var fieldValue = dataRow[fieldName];
-
-                        propertyInfo.SetValue(entitiesList, fieldValue);
+                        propertyInfo.SetValue(entity, fieldValue);
                     }
 
-                    refEntities.Add(entitiesList);
+                    refEntities.Add(entity);
                 }
             }
             dataAdapter.Dispose();

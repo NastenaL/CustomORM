@@ -12,7 +12,7 @@
     {
         public PlayingField()
         {
-            this.Ships = new List<MixShip>();
+            this.Ships = new List<Ship>();
         }
 
         [IgnoreProperty]
@@ -35,8 +35,8 @@
         }
 
         [IgnoreProperty]
-        [RelatedEntity(TableName = "Ship", ColumnName = "PlayingFieldId", PropertyName ="Ships")]
-        public List<MixShip> Ships { get; set; }
+        [RelatedEntity(TableName = "MixShip", ColumnName = "PlayingFieldId", PropertyName ="Ships")]
+        public List<Ship> Ships { get; set; }
 
         public Ship AddShip(Point startPoint, ShipType type)
         {
