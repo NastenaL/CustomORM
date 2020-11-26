@@ -10,12 +10,23 @@
     [Table("PlayingField")]
     public class PlayingField
     {
+        private Ship[] indexArr = new Ship[5];
+
         public PlayingField()
         {
             this.Ships = new Dictionary<Point, Ship>();
         }
+        #region Properties
+        public Ship this[int q]
+        {
+            get { return indexArr[q]; }
+            set { indexArr[q] = value; }
+        }
 
-        private Ship[] indexArr = new Ship[5];
+        public Dictionary<Point, Ship> Ships { get; set; }
+        #endregion
+
+        #region Methods
         public Ship[] AddToIndexArr(int size, Ship value)
         {
             if (indexArr == null)
@@ -25,14 +36,6 @@
             indexArr.SetValue(value, size - 1);
             return indexArr;
         }
-
-        public Ship this[int q]
-        {
-            get { return indexArr[q]; }
-            set { indexArr[q] = value; }
-        }
-
-        public Dictionary<Point, Ship> Ships { get; set; }
 
         public Ship AddShip(Point startPoint, ShipType type)
         {
@@ -54,7 +57,7 @@
                     break;
             }
 
-            this.InitializeShip(ref ship, startPoint);
+            this.InitializeShip(ref ship);
             this.Ships.Add(startPoint, ship);
             AddToIndexArr(Ships.Count, ship);
             var i = this.GenerateIndex(this.GetQuadrant(startPoint), startPoint);
@@ -94,6 +97,7 @@
             int ab = (a * ((int)Math.Pow(10, bLength))) + b;
             return (int)ab;
         }
+
         private byte GetQuadrant(Point shipPoint)
         {
             if (shipPoint.X >= 0)
@@ -101,7 +105,7 @@
             return shipPoint.Y >= 0 ? (byte)2 : (byte)3;
         }
 
-        private void InitializeShip(ref Ship ship, Point coordinates)
+        private void InitializeShip(ref Ship ship)
         {
             Random random = new Random();
             ship.Dx = random.Next(Сonfiguration.MinMovementVector, Сonfiguration.MaxMovementVector);
@@ -113,5 +117,6 @@
         {
             return Math.Sqrt(Math.Pow(coordinates.X - 0, 2) + Math.Pow(coordinates.Y - 0, 2));
         }
+        #endregion
     }
 }
